@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/appointments", appointmentRoutes);
+app.use("/api/appointmentRoutes", appointmentRoutes);
 
 // Export as serverless function for Vercel
 let serverless = require("serverless-http");
