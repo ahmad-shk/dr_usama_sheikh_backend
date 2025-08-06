@@ -1,27 +1,29 @@
-// index.js
-
 const express = require("express");
+const dotenv = require("dotenv");
 const cors = require("cors");
-const axios = require("axios");
+const connectToDatabase = require("./db/connect"); // MongoDB connection file
+const appointmentRoutes = require("./routes/appointmentRoutes"); // Appointment route file
 
+// Load environment variables from .env file
+dotenv.config();
+
+// Create Express app
 const app = express();
-app.use(cors());
-app.use(express.json());
 
-const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbxabH6-NEbRuoIZNgt2vmn_9zmFkO6e2SHeiMaZDz3j6v5KZMq5FxTfcauLJCkRz4LN/exec";
+// Middlewares
+app.use(cors()); // Enable CORS
+app.use(express.json()); // Parse incoming JSON
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-app.post("/submit", async (req, res) => {
-  try {
-    const response = await axios.post(GOOGLE_SCRIPT_URL, req.body);
-    res.json({ success: true, result: response.data });
-  } catch (error) {
-    console.error("Error sending to Google Sheet:", error.message);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+// Routes
+app.use("/api/appointments", appointmentRoutes); // Use appointment routes
 
+// Start server after DB connection
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`✅ Backend running on http://localhost:${PORT}`);
+connectToDatabase().then(() => {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+  });
+}).catch((error) => {
+  console.error("❌ Failed to connect to database:", error);
 });
