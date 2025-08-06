@@ -1,32 +1,29 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const connectToDatabase = require("../db/connect");
-const appointmentRoutes = require("../routes/appointmentRoutes");
+const connectToDatabase = require("./db/connect"); // MongoDB connection file
+const appointmentRoutes = require("./routes/appointmentRoutes"); // Appointment route file
 
+// Load environment variables from .env file
 dotenv.config();
 
+// Create Express app
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Middlewares
+app.use(cors()); // Enable CORS
+app.use(express.json()); // Parse incoming JSON
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-app.use("/api/appointmentRoutes", appointmentRoutes);
+// Routes
+app.use("/api/appointments", appointmentRoutes); // Use appointment routes
 
-// Export as serverless function for Vercel
-let serverless = require("serverless-http");
-
-// Connect to DB only once
-let isConnected = false;
-async function connectDBOnce() {
-  if (!isConnected) {
-    await connectToDatabase();
-    isConnected = true;
-  }
-}
-
-module.exports.handler = async (req, res) => {
-  await connectDBOnce();
-  return serverless(app)(req, res);
-};
+// Start server after DB connection
+const PORT = process.env.PORT || 5000;
+connectToDatabase().then(() => {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+  });
+}).catch((error) => {
+  console.error("❌ Failed to connect to database:", error);
+});
