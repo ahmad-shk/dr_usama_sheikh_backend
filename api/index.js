@@ -1,20 +1,12 @@
-// api/index.js (Final Version for Vercel)
 const express = require("express");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const connectToDatabase = require("../db/connect"); // Note the correct path
-
-dotenv.config();
-
 const app = express();
-app.use(cors());
+const appointmentRoutes = require("../appointmentRoutes");
+
+// Middleware to parse JSON
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-const appointmentRoutes = require("../routes/appointmentRoutes");
-app.use("/api/appointments", appointmentRoutes);
+// Mount your appointment routes under /api
+app.use("/api", appointmentRoutes);
 
-// Connect to DB once and export app
-connectToDatabase();
-
+// Export the app — DO NOT call app.listen() in Vercel
 module.exports = app;
