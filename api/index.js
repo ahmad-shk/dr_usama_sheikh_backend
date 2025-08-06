@@ -1,29 +1,29 @@
 const express = require("express");
-const serverless = require("serverless-http");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const connectToDatabase = require("../db/connect"); // Adjust path as needed
-const appointmentRoutes = require("../routes/appointmentRoutes");
+const connectToDatabase = require("../db/connect"); // MongoDB connection file
+const appointmentRoutes = require("../routes/appointmentRoutes"); // Appointment route file
 
+// Load environment variables from .env file
 dotenv.config();
 
+// Create Express app
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use("/api/appointments", appointmentRoutes);
 
-// Connect to DB before exporting handler
-let isConnected = false;
+// Middlewares
+app.use(cors()); // Enable CORS
+app.use(express.json()); // Parse incoming JSON
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+
+// Routes
+app.use("/api/appointmentRoutes", appointmentRoutes); // Use appointment routes
+
+// Start server after DB connection
+const PORT = process.env.PORT || 5000;
 connectToDatabase().then(() => {
-  isConnected = true;
-}).catch((err) => {
-  console.error("DB connection failed:", err);
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+  });
+}).catch((error) => {
+  console.error("❌ Failed to connect to database:", error);
 });
-
-module.exports = async (req, res) => {
-  if (!isConnected) {
-    await connectToDatabase();
-    isConnected = true;
-  }
-  return serverless(app)(req, res);
-};
