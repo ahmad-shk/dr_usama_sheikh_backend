@@ -1,29 +1,26 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const connectToDatabase = require("./db/connect"); // MongoDB connection file
-const appointmentRoutes = require("./routes/appointmentRoutes"); // Appointment route file
+const connectToDatabase = require("../db/connect"); // change path: one level up
+const appointmentRoutes = require("../routes/appointmentRoutes"); // change path: one level up
 
-// Load environment variables from .env file
 dotenv.config();
 
-// Create Express app
 const app = express();
 
-// Middlewares
-app.use(cors()); // Enable CORS
-app.use(express.json()); // Parse incoming JSON
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use("/api/appointments", appointmentRoutes); // Use appointment routes
+app.use("/api/appointments", appointmentRoutes);
 
-// Start server after DB connection
-const PORT = process.env.PORT || 5000;
-connectToDatabase().then(() => {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
-  });
-}).catch((error) => {
-  console.error("❌ Failed to connect to database:", error);
-});
+// Vercel expects a handler function, not a server start
+let isConnected = false;
+
+module.exports = async (req, res) => {
+  if (!isConnected) {
+    await connectToDatabase();
+    isConnected = true;
+  }
+  return app(req, res); // pass the request to express app
+};
