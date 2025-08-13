@@ -7,7 +7,13 @@ const appointmentSchema = new mongoose.Schema({
   time: { type: String, required: true },
   name: { type: String, required: true },
   phone: { type: String, required: true },
-  message: { type: String }
+  message: { type: String },
+  amount: { type: Number, required: false }, // 💰 Amount field
+  status: { 
+    type: String, 
+    enum: ["pending", "confirmed", "completed", "cancelled"], // Status options
+    default: "pending" 
+  }
 }, {
   timestamps: true
 });
