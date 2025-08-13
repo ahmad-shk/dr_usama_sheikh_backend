@@ -11,7 +11,7 @@ const appointmentSchema = new mongoose.Schema({
   amount: { type: Number, required: false }, // 💰 Amount field
   status: { 
     type: String, 
-    enum: ["pending", "confirmed", "completed", "cancelled"], // Status options
+    enum: ["pending", "completed", "rejected"], // Status options
     default: "pending" 
   }
 }, {
