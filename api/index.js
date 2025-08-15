@@ -4,7 +4,7 @@ const cors = require("cors");
 
 const connectToDatabase = require("../db/connect"); // Note the relative path
 const appointmentRoutes = require("../routes/appointmentRoutes"); // Assuming routes folder at project root
-
+const queryRoutes = require("../routes/queryRoutes");
 dotenv.config();
 
 const app = express();
@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/appointmentRoutes", appointmentRoutes);
-
+app.use("/api/queries", queryRoutes);
 const PORT = process.env.PORT || 5000;
 
 connectToDatabase()
