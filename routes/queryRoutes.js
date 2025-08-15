@@ -8,19 +8,19 @@ const {
   deleteQuery
 } = require("../controllers/queryController");
 
-// CREATE
+// CREATE Query
 router.post("/", createQuery);
 
-// GET All
+// GET All Queries
 router.get("/", getQueries);
 
-// GET by ID
+// GET Single Query
 router.get("/:id", getQueryById);
 
-// UPDATE
+// UPDATE Query
 router.put("/:id", updateQuery);
 
-// DELETE
+// DELETE Query
 router.delete("/:id", deleteQuery);
 
 module.exports = router;

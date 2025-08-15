@@ -3,9 +3,9 @@ const Query = require("../models/Query");
 // CREATE Query
 const createQuery = async (req, res) => {
   try {
-    const { name, email, phone, message, status } = req.body;
+    const { name, phone, department, message, status } = req.body;
 
-    const newQuery = new Query({ name, email, phone, message, status });
+    const newQuery = new Query({ name, phone, department, message, status });
     await newQuery.save();
 
     res.status(201).json({ success: true, message: "Query submitted successfully" });
@@ -18,14 +18,14 @@ const createQuery = async (req, res) => {
 // GET All Queries
 const getQueries = async (req, res) => {
   try {
-    const queries = await Query.find().sort({ createdAt: -1 });
+    const queries = await Query.find();
     res.status(200).json(queries);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// GET Single Query
+// GET Single Query by ID
 const getQueryById = async (req, res) => {
   try {
     const query = await Query.findById(req.params.id);
