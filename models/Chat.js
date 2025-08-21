@@ -8,6 +8,11 @@ const ChatSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'completed'],
+    default: 'pending'
   }
 }, { timestamps: true });
 
