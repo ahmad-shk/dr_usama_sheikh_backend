@@ -8,7 +8,7 @@ const appointmentSchema = new mongoose.Schema({
   time: { type: String, required: true },
   name: { type: String, required: true },
   phone: { type: String, required: true },
-  gender: { type: String, enum: ["Male", "Female"], required: true }, // ✅ added
+  gender: { type: String, enum: ["Male", "Female"] },
   age: { type: Number },   // ✅ added
   weight: { type: Number }, // ✅ added
   message: { type: String },
