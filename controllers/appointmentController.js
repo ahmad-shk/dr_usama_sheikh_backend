@@ -5,11 +5,15 @@ const createAppointment = async (req, res) => {
   try {
     const {
       clinic,
+      city,
       service,
       date,
       time,
       name,
       phone,
+      gender,
+      age,
+      weight,
       message,
       amount,
       status
@@ -17,11 +21,15 @@ const createAppointment = async (req, res) => {
 
     const newAppointment = new Appointment({
       clinic,
+      city,
       service,
       date,
       time,
       name,
       phone,
+      gender,
+      age,
+      weight,
       message,
       amount,
       status
